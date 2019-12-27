@@ -162,10 +162,11 @@ void loop()
       }
       
     }
-      transmit[0] = analogRead(P0) & 0xFF;
-      transmit[1] = analogRead(P0)>>8;
-      transmit[2] = analogRead(P1) & 0xFF;
-      transmit[3] = analogRead(P1)>>8;
-      sendPacket(4, transmit);
+      transmit[0] = 'P';
+      transmit[1] = analogRead(P0) & 0xFF;
+      transmit[2] = analogRead(P0)>>8;
+      transmit[3] = analogRead(P1) & 0xFF;
+      transmit[4] = analogRead(P1)>>8;
+      sendPacket(5, transmit);
   }
 }

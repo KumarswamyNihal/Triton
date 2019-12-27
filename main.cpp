@@ -45,7 +45,8 @@ int main()
 	int ser_dev, count = 0, packetSize = 0;
 	size_t res;
 	struct termios my_serial;
-	unsigned char ob[10];
+	unsigned char ob[50];
+	unsigned char buffer[255];
 	ser_dev = open("/dev/ttyACM0", O_RDWR | O_NOCTTY);
 
 	bzero(&my_serial, sizeof(my_serial));
@@ -63,6 +64,7 @@ int main()
 				else{//TODO: VALIDATE
 					if(count == 0 && ob[0] == PACKET_START_BYTE)
 					{
+						buffer[count] = ob[0];
 						count++;
 						continue;
 					}
@@ -70,17 +72,19 @@ int main()
 					continue;
 
 					else if(count == 1){
-						packetSize = ob[1];
+						buffer[count] = ob[0];
+						packetSize = ob[0];
 						count++;
 						continue;
 					}
 					else if(count<packetSize){
+						buffer[count] = ob[0];
 						count++;
 					}
 					if(count >= packetSize){
-						if(validatepacket(packetSize, ob) == 1){
+						if(validatepacket(packetSize, buffer) == 1){
 							//Received a packet
-							printf("%c\n", ob[1]);
+							printf("%d\n", buffer[6]<<8);
 						}
 						else
 						{
@@ -90,16 +94,12 @@ int main()
 						count = 0;
 						packetSize = 0;
 					}
-
 				}
-				
-				
 			}
 			else
 			{
 				usleep(100000);	//Sleep between threads. Need to decrease time
 			}
-			
 		}
 
 	return 0;
