@@ -167,6 +167,6 @@ void loop()
       transmit[2] = analogRead(P0)>>8;
       transmit[3] = analogRead(P1) & 0xFF;
       transmit[4] = analogRead(P1)>>8;
-      sendPacket(5, transmit);
+      //sendPacket(5, transmit);
   }
 }

@@ -55,6 +55,16 @@ int main()
 	tcsetattr(ser_dev, TCSANOW, &my_serial);
 		
 		while(1){
+			char buff[10];
+							buff[0] = 0xAA;
+							buff[1] = 8;
+							buff[2] = 0x50;
+							buff[3] = 0x70;
+							buff[4] = 0x00;
+							buff[5] = 0x6F;
+							buff[6] = 0x00;
+							buff[7] = 0xED;
+							write(ser_dev, buff, 8);
 			if(ser_dev != -1){
 				res = read(ser_dev, ob, 1);
 
@@ -84,7 +94,8 @@ int main()
 					if(count >= packetSize){
 						if(validatepacket(packetSize, buffer) == 1){
 							//Received a packet
-							printf("%d\n", buffer[6]<<8);
+							printf("%d\n", buffer[1]);
+							
 						}
 						else
 						{
