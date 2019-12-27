@@ -99,6 +99,11 @@ void loop()
 
   while(isRunning)
   {
+      /*transmit[0] = 144 & 0xFF;
+      transmit[1] = 144>>8;
+      transmit[2] = analogRead(P1) & 0xFF;
+      transmit[3] = analogRead(P1)>>8;
+      sendPacket(4, transmit);*/
     if(Serial.available())
     {
       byte b = Serial.read();
@@ -155,12 +160,12 @@ void loop()
         }
         count = 0;
       }
-      //TODO:: SEND P0 AND P1 VALUES IN A BUFFER
+      
+    }
       transmit[0] = analogRead(P0) & 0xFF;
       transmit[1] = analogRead(P0)>>8;
       transmit[2] = analogRead(P1) & 0xFF;
       transmit[3] = analogRead(P1)>>8;
       sendPacket(4, transmit);
-    }
   }
 }
