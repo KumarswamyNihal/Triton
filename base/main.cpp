@@ -4,6 +4,7 @@
  *
  */
 #include <stdio.h>
+#include <gtk/gtk.h>
 #include "string.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -16,13 +17,21 @@
 #include <thread>
 #include "asio.hpp"
 #include "chat_message.hpp"
+ #include "global.h"
 
+#define __STDC_FORMAT_MACROS
 //#define ASIO_STANDALONE
 #define PACKET_START_BYTE  0xAA
 using asio::ip::tcp;
 
-typedef std::deque<chat_message> chat_message_queue;
 
+typedef std::deque<chat_message> chat_message_queue;
+void ObtainGuiWidgets(GtkBuilder *p_builder)
+{
+  #define GuiappGET(xx) gui_app->xx=GTK_WIDGET(gtk_builder_get_object(p_builder,#xx))
+  GuiappGET(window1);
+    
+}
 class chat_client
 {
 public:
@@ -165,10 +174,43 @@ int validatepacket(int packetSize, unsigned char *buffer)
 }
 int main(int argc, char* argv[])
 {
-	 asio::io_context io_context;
+	GtkBuilder *builder;
+  GError *err = NULL;
+  gtk_init(&argc, &argv);
+  
+  //create gtk_instance for visualization
+  gui_app = g_slice_new(Gui_Window_AppWidgets);
+
+  //builder
+  builder = gtk_builder_new();
+  gtk_builder_add_from_file(builder, "sprint1.glade", &err);
+
+  if(err)
+    {
+      g_error(err->message);
+      g_error_free(err);
+      g_slice_free(Gui_Window_AppWidgets, gui_app);
+      exit(-1);
+    }
+
+  // Obtain widgets that we need
+  ObtainGuiWidgets(builder);
+
+// Connect signals
+  gtk_builder_connect_signals(builder, gui_app);
+
+  // Destroy builder now that we created the infrastructure
+  g_object_unref(G_OBJECT(builder));
+
+  //display the gui
+  gtk_widget_show(GTK_WIDGET(gui_app->window1));
+
+  
+
+	asio::io_context io_context;
 
     tcp::resolver resolver(io_context);
-    auto endpoints = resolver.resolve(argv[1], argv[2]);
+    auto endpoints = resolver.resolve(argv[1], "5000");
     chat_client c(io_context, endpoints); 
 	
     std::thread t([&io_context](){ io_context.run(); });
@@ -254,5 +296,6 @@ int main(int argc, char* argv[])
 		}
 	c.close();
     t.join();
+	gtk_main();
 	return 0;
 }
