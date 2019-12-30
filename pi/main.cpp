@@ -15,9 +15,13 @@ int main(int argc, char* argv[])
     int count = 0, packetSize = 0;
 	size_t res;
 	struct termios my_serial;
+    logger *serial_rec;
 	unsigned char ob[50];
 	unsigned char buffer[255];
 	
+    /*Initializing logger objects with filenames*/
+    serial_rec = new logger("serial_rec.dat");
+
     /*Opening serial port*/
     ser_dev = open("/dev/ttyACM0", O_RDWR | O_NOCTTY);
 	bzero(&my_serial, sizeof(my_serial));
@@ -38,6 +42,7 @@ int main(int argc, char* argv[])
 			res = read(ser_dev, ob, 1);
 				
 			if(res == 0){
+                //Sleep between characters
 				usleep(1000);
             }
 				
@@ -63,10 +68,16 @@ int main(int argc, char* argv[])
 				if(count >= packetSize){
 					if(validatepacket(packetSize, buffer) == 1){
 						//Received a packet
-                        /*TODO: LOG RECEIVED PACKET BEFORE TAKING ACTION*/
 
-						if(containsP(packetSize, buffer) == 1){
-                            /*TODO: CALL ENCODE_ASIO() AND SEND PRESSURE READINGS*/
+                        serial_rec->log((char*)buffer, packetSize);
+						
+                        if(containsP(packetSize, buffer) == 1){
+                            /*If packet from serial port contains pressure readings, send via ASIO*/
+                            chat_message msg;
+                            msg.body_length(packetSize);
+                            strncpy(msg.body(), (const char*)buffer, packetSize);
+                            msg.encode_header();
+                            c.write(msg);
                         }
 							
 					}
@@ -83,6 +94,8 @@ int main(int argc, char* argv[])
 			usleep(100000);	//Sleep between threads. Need to decrease time
 			}
 	}
+
+    free(serial_rec);
 
     return 0;
 }

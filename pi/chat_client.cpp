@@ -72,6 +72,11 @@ chat_client::~chat_client()
         {
           if (!ec)
           {
+            /*TODO: Log recieved message 
+                    Verify whether is contains valve state
+                    encode into payload and write to serial port 
+                    log payload  
+            */
             std::cout.write(read_msg_.body(), read_msg_.body_length());
             //printf("%c",read_msg_.body()[2]);
             std::cout << "\n";

@@ -27,3 +27,25 @@ int logger::log(char *text, int size)
     return 0;
 
 }
+
+int logger::log(std::string text)
+{
+    if(!outfile)
+        return -1;
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer[20];
+
+    time (&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
+    outfile.write(buffer, 19);
+    outfile<<",";
+    outfile<<text;
+    outfile<<std::endl;
+
+    return 0;
+
+}
+
