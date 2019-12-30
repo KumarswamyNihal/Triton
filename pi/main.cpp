@@ -7,39 +7,8 @@
 
 #include "chat_client.h"
 #include "logger.h"
+#include "packets.h"
 
-#define PACKET_START_BYTE  0xAA
-int validatepacket(int packetSize, unsigned char *buffer)
-{
-	if(buffer[0] != PACKET_START_BYTE)
-	{
-		printf("VALIDATE BIG%c\n", buffer[0]);
-		return 0;
-
-	}
-		
-	if(buffer[1] != packetSize)
-	{
-		
-		return 0;
-	}
-
-	if(buffer == NULL)
-	{
-		
-		return 0;
-	}
-	unsigned char checksum = 0x00;
-	for(unsigned int i=0; i < packetSize-1; i++)
-		checksum = checksum ^ buffer[i];
-	
-	if(buffer[packetSize-1] != checksum){
-		printf("%c", checksum);
-		return 0; 
-	}
-
-	return 1;
-}
 int main(int argc, char* argv[])
 {
     int ser_dev, count = 0, packetSize = 0;
@@ -64,69 +33,56 @@ int main(int argc, char* argv[])
     std::thread t([&io_context](){ io_context.run(); });
 
     while(1){
-			//char buff[10];
-							/* buff[0] = 0xAA;
-							buff[1] = 8;
-							buff[2] = 0x50;
-							buff[3] = 0x70;
-							buff[4] = 0x00;
-							buff[5] = 0x6F;
-							buff[6] = 0x00;
-							buff[7] = 0xED;
-							write(ser_dev, buff, 8); */
-			if(ser_dev != -1){
-				res = read(ser_dev, ob, 1);
+		if(ser_dev != -1){
+			res = read(ser_dev, ob, 1);
 				
-				if(res == 0)
+			if(res == 0){
 				usleep(1000);
+            }
 				
-				else{//TODO: VALIDATE
-					if(count == 0 && ob[0] == PACKET_START_BYTE)
-					{
-						
-						buffer[count] = ob[0];
-						count++;
-						continue;
-					}
-					else if(count == 0)
+			else{//TODO: VALIDATE
+				if(count == 0 && ob[0] == PACKET_START_BYTE){
+					buffer[count] = ob[0];
+					count++;
 					continue;
+				}
+				else if(count == 0)
+				    continue;
 
-					else if(count == 1){
-						buffer[count] = ob[0];
-						packetSize = ob[0];
-						count++;
-						continue;
-					}
-					else if(count<packetSize){
-						buffer[count] = ob[0];
-						count++;
-					}
-					if(count >= packetSize){
-						if(validatepacket(packetSize, buffer) == 1){
-							//Received a packet
-							chat_message msg;
-      						msg.body_length(packetSize);
-      						strncpy(msg.body(), (const char*)buffer, packetSize);
-							//printf("buffer is: %c\n", buffer[4]);
-      						msg.encode_header();
-      						c.write(msg); 
+				else if(count == 1){
+					buffer[count] = ob[0];
+					packetSize = ob[0];
+					count++;
+					continue;
+				}
+				else if(count<packetSize){
+				    buffer[count] = ob[0];
+					count++;
+				}
+				if(count >= packetSize){
+					if(validatepacket(packetSize, buffer) == 1){
+						//Received a packet
+						chat_message msg;
+      					msg.body_length(packetSize);
+      					strncpy(msg.body(), (const char*)buffer, packetSize);
+					    //printf("buffer is: %c\n", buffer[4]);
+      					msg.encode_header();
+      					c.write(msg); 
 							
-						}
-						else
-						{
-							printf("VALIDATE FAILED\n");
-						}
+					}
+					else{
+						printf("VALIDATE FAILED\n");
+					}
 						
 						count = 0;
 						packetSize = 0;
-					}
 				}
 			}
-			else
-			{
-				usleep(100000);	//Sleep between threads. Need to decrease time
-			}
 		}
+		else{
+			usleep(100000);	//Sleep between threads. Need to decrease time
+			}
+	}
 
     return 0;
 }
