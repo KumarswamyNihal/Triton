@@ -42,3 +42,17 @@ int containsP(int packetSize, unsigned char *buffer)
 	
 	return 1;
 }
+
+int containsV(int packetSize, unsigned char *buffer)
+{
+	if(packetSize != 5)
+		return -1;
+	
+	if(buffer[2] != 'V')
+		return -1;
+	
+	if(buffer[3] != 'T' && buffer[3] != 'F')
+		return -1;
+
+	return 0;
+}

@@ -1,5 +1,6 @@
 #include "chat_client.h"
 #include "global.h"
+#include "packets.h"
 
 using asio::ip::tcp;
 
@@ -9,14 +10,14 @@ chat_client::chat_client(asio::io_context& io_context,
       socket_(io_context)
   {
     
-    tmp = new logger(file_name);
+    serial_trans = new logger(file_name);
     do_connect(endpoints);
   }
 chat_client::~chat_client()
 {
-  free(tmp);
+  free(serial_trans);
 }
-  void chat_client::write(const chat_message& msg)
+  void chat_client::write_asio(const chat_message& msg)
   {
     asio::post(io_context_,
         [this, msg]()
@@ -72,14 +73,14 @@ chat_client::~chat_client()
         {
           if (!ec)
           {
-            /*TODO: Log recieved message 
-                    Verify whether is contains valve state
-                    encode into payload and write to serial port 
-                    log payload  
-            */
-            std::cout.write(read_msg_.body(), read_msg_.body_length());
+
+           if(containsP(read_msg_.body_length(), (unsigned char*)read_msg_.body())){
+             serial_trans->log(read_msg_.body(), read_msg_.body_length());
+             write(ser_dev, read_msg_.body(), read_msg_.body_length());
+           }
+            //std::cout.write(read_msg_.body(), read_msg_.body_length());
             //printf("%c",read_msg_.body()[2]);
-            std::cout << "\n";
+            //std::cout << "\n";
             do_read_header();
           }
           else

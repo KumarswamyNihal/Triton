@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 
     tcp::resolver resolver(io_context);
     auto endpoints = resolver.resolve(argv[1], "5000");
-    chat_client c(io_context, endpoints, "test");
+    chat_client c(io_context, endpoints, "serial_trans.dat");
     std::thread t([&io_context](){ io_context.run(); });
 
     while(1){
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
                             msg.body_length(packetSize);
                             strncpy(msg.body(), (const char*)buffer, packetSize);
                             msg.encode_header();
-                            c.write(msg);
+                            c.write_asio(msg);
                         }
 							
 					}

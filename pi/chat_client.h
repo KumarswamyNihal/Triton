@@ -6,6 +6,7 @@
 #include "chat_message.hpp"
 
 #include "logger.h"
+
 #pragma once
 
 typedef std::deque<chat_message> chat_message_queue;
@@ -17,7 +18,7 @@ class chat_client
         chat_client(asio::io_context& io_context,
             const tcp::resolver::results_type& endpoints, std::string file_name);
         ~chat_client();
-        void write(const chat_message& msg);
+        void write_asio(const chat_message& msg);
         void close();
 
     private:
@@ -29,6 +30,6 @@ class chat_client
         tcp::socket socket_;
         chat_message read_msg_;
         chat_message_queue write_msgs_;
-        logger *tmp;
+        logger *serial_trans;
         
 };
