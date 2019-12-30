@@ -8,10 +8,11 @@
 #include "chat_client.h"
 #include "logger.h"
 #include "packets.h"
+#include "global.h"
 
 int main(int argc, char* argv[])
 {
-    int ser_dev, count = 0, packetSize = 0;
+    int count = 0, packetSize = 0;
 	size_t res;
 	struct termios my_serial;
 	unsigned char ob[50];
@@ -29,7 +30,7 @@ int main(int argc, char* argv[])
 
     tcp::resolver resolver(io_context);
     auto endpoints = resolver.resolve(argv[1], "5000");
-    chat_client c(io_context, endpoints);
+    chat_client c(io_context, endpoints, "test");
     std::thread t([&io_context](){ io_context.run(); });
 
     while(1){
@@ -62,12 +63,11 @@ int main(int argc, char* argv[])
 				if(count >= packetSize){
 					if(validatepacket(packetSize, buffer) == 1){
 						//Received a packet
-						chat_message msg;
-      					msg.body_length(packetSize);
-      					strncpy(msg.body(), (const char*)buffer, packetSize);
-					    //printf("buffer is: %c\n", buffer[4]);
-      					msg.encode_header();
-      					c.write(msg); 
+                        /*TODO: LOG RECEIVED PACKET BEFORE TAKING ACTION*/
+
+						if(containsP(packetSize, buffer) == 1){
+                            /*TODO: CALL ENCODE_ASIO() AND SEND PRESSURE READINGS*/
+                        }
 							
 					}
 					else{

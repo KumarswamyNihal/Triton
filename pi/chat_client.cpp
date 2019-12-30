@@ -1,22 +1,21 @@
-/* #include <cstdlib>
-#include <deque>
-#include <iostream>
-#include <thread>
-#include "asio.hpp"
-#include "chat_message.hpp" */
-
 #include "chat_client.h"
+#include "global.h"
 
 using asio::ip::tcp;
 
 chat_client::chat_client(asio::io_context& io_context,
-      const tcp::resolver::results_type& endpoints)
+      const tcp::resolver::results_type& endpoints, std::string file_name)
     : io_context_(io_context),
       socket_(io_context)
   {
+    
+    tmp = new logger(file_name);
     do_connect(endpoints);
   }
-
+chat_client::~chat_client()
+{
+  free(tmp);
+}
   void chat_client::write(const chat_message& msg)
   {
     asio::post(io_context_,
@@ -74,6 +73,7 @@ chat_client::chat_client(asio::io_context& io_context,
           if (!ec)
           {
             std::cout.write(read_msg_.body(), read_msg_.body_length());
+            //printf("%c",read_msg_.body()[2]);
             std::cout << "\n";
             do_read_header();
           }

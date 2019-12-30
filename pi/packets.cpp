@@ -31,3 +31,14 @@ int validatepacket(int packetSize, unsigned char *buffer)
 
 	return 1;
 }
+
+int containsP(int packetSize, unsigned char *buffer)
+{
+	if(packetSize != 8)
+		return -1;
+
+	if(buffer[2] != 'P')
+		return -1;
+	
+	return 1;
+}
