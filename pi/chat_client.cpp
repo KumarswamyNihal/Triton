@@ -74,7 +74,7 @@ chat_client::~chat_client()
           if (!ec)
           {
 
-           if(containsP(read_msg_.body_length(), (unsigned char*)read_msg_.body())){
+           if(containsV(read_msg_.body_length(), (unsigned char*)read_msg_.body()) == 1 && validatepacket(read_msg_.body_length(), (unsigned char*)read_msg_.body()) == 1){
              serial_trans->log(read_msg_.body(), read_msg_.body_length());
              write(ser_dev, read_msg_.body(), read_msg_.body_length());
            }
