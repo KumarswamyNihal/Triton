@@ -1,7 +1,9 @@
 /*TODO
  *Move chat client stuff to chat client.cpp
  *Build GUI with PO/1 MAX LAST TIME STAMP AND OPEN CLOSE BUTTONS
- *
+ *Update Makefile
+ *Write up-to date TODO's 
+ *Only log pressure values just like the python script, Pi logs serial port 
  */
 #include <stdio.h>
 #include <gtk/gtk.h>
@@ -20,7 +22,12 @@
  #include "global.h"
 
 #define __STDC_FORMAT_MACROS
-//#define ASIO_STANDALONE
+
+/*
+ *#define ASIO_STANDALONE
+ *Already defined in Makefile
+*/
+
 #define PACKET_START_BYTE  0xAA
 using asio::ip::tcp;
 
