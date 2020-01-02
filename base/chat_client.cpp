@@ -13,7 +13,7 @@ typedef std::deque<chat_message> chat_message_queue;
     endpoints = resolver.resolve(ip, port);
 
     do_connect(endpoints);
-    t = new std::thread([&io_context_](){ io_context_.run(); });
+    t = new std::thread([this](){ io_context_.run(); });
   }
 
   chat_client::~chat_client()
