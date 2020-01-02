@@ -5,14 +5,22 @@ using asio::ip::tcp;
 
 typedef std::deque<chat_message> chat_message_queue;
 
-  chat_client::chat_client(asio::io_context& io_context,
-      const tcp::resolver::results_type& endpoints, std::string file_name)
-    : io_context_(io_context),
-      socket_(io_context)
+  chat_client::chat_client(std::string ip, std::string port, std::string file_name)
+    : socket_(io_context_)
   {
+    data = new logger(file_name);
+    tcp::resolver resolver(io_context_);
+    endpoints = resolver.resolve(ip, port);
+
     do_connect(endpoints);
+    t = new std::thread([&io_context_](){ io_context_.run(); });
   }
 
+  chat_client::~chat_client()
+{
+  t->join();
+  free(data);
+}
   void chat_client::write(const chat_message& msg)
   {
     asio::post(io_context_,
