@@ -1,4 +1,4 @@
-CXXFLAGS += --std=c++17
+CXXFLAGS += --std=c++17 -rdynamic
 CXXFLAGS += -DASIO_STANDALONE
 ASIOFLAGS += -lpthread 
 GTKFLAGS += `pkg-config --cflags --libs gtk+-3.0`
