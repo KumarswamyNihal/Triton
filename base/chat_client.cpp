@@ -8,29 +8,22 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <cstdlib>
-#include <deque>
-#include <iostream>
-#include <thread>
-#include "asio.hpp"
-#include "chat_message.hpp"
+#include "chat_client.h"
+#include "global.h"
 
 using asio::ip::tcp;
 
 typedef std::deque<chat_message> chat_message_queue;
 
-class chat_client
-{
-public:
-  chat_client(asio::io_context& io_context,
-      const tcp::resolver::results_type& endpoints)
+  chat_client::chat_client(asio::io_context& io_context,
+      const tcp::resolver::results_type& endpoints, std::string file_name)
     : io_context_(io_context),
       socket_(io_context)
   {
     do_connect(endpoints);
   }
 
-  void write(const chat_message& msg)
+  void chat_client::write(const chat_message& msg)
   {
     asio::post(io_context_,
         [this, msg]()
@@ -44,13 +37,13 @@ public:
         });
   }
 
-  void close()
+  void chat_client::close()
   {
     asio::post(io_context_, [this]() { socket_.close(); });
   }
 
-private:
-  void do_connect(const tcp::resolver::results_type& endpoints)
+
+  void chat_client::do_connect(const tcp::resolver::results_type& endpoints)
   {
     asio::async_connect(socket_, endpoints,
         [this](std::error_code ec, tcp::endpoint)
@@ -62,7 +55,7 @@ private:
         });
   }
 
-  void do_read_header()
+  void chat_client::do_read_header()
   {
     asio::async_read(socket_,
         asio::buffer(read_msg_.data(), chat_message::header_length),
@@ -79,7 +72,7 @@ private:
         });
   }
 
-  void do_read_body()
+  void chat_client::do_read_body()
   {
     asio::async_read(socket_,
         asio::buffer(read_msg_.body(), read_msg_.body_length()),
@@ -98,7 +91,7 @@ private:
         });
   }
 
-  void do_write()
+  void chat_client::do_write()
   {
     asio::async_write(socket_,
         asio::buffer(write_msgs_.front().data(),
@@ -120,14 +113,8 @@ private:
         });
   }
 
-private:
-  asio::io_context& io_context_;
-  tcp::socket socket_;
-  chat_message read_msg_;
-  chat_message_queue write_msgs_;
-};
 
-int main(int argc, char* argv[])
+/* int main(int argc, char* argv[])
 {
   try
   {
@@ -137,14 +124,13 @@ int main(int argc, char* argv[])
       return 1;
     }
 
-    asio::io_context io_context;
+     asio::io_context io_context;
 
     tcp::resolver resolver(io_context);
     auto endpoints = resolver.resolve(argv[1], argv[2]);
     chat_client c(io_context, endpoints);
 
-    std::thread t([&io_context](){ io_context.run(); });
-
+    std::thread t([&io_context](){ io_context.run(); }); 
     char line[chat_message::max_body_length + 1];
     while (std::cin.getline(line, chat_message::max_body_length + 1))
     {
@@ -164,4 +150,4 @@ int main(int argc, char* argv[])
   }
 
   return 0;
-}
+} */
