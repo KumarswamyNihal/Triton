@@ -32,6 +32,7 @@ void ObtainGuiWidgets(GtkBuilder *p_builder)
   GuiappGET(entry_p0_max);
   GuiappGET(entry_p1);
   GuiappGET(entry_p1_max);
+  GuiappGET(entry_valve);
   GuiappGET(button_reset_p1);
   GuiappGET(button_reset_p0);
   GuiappGET(button_open_valve);
@@ -61,6 +62,19 @@ gboolean  P1_Display_Displayer(gpointer p_gptr)
   gtk_label_set_text(GTK_LABEL(gui_app->entry_p1),P1);
   g_mutex_unlock(P1_mutex);
   //P1_mutex.lock();
+  return true;
+}
+
+gboolean  valve_Display_Displayer(gpointer p_gptr)
+{
+   char tr[40] = "OPEN", fa[40] = "CLOSED";
+  g_mutex_lock(valve_mutex);
+   if(valve_state == true)
+    gtk_label_set_text(GTK_LABEL(gui_app->entry_valve),tr);
+  else if(valve_state == false)
+    gtk_label_set_text(GTK_LABEL(gui_app->entry_valve),fa); 
+  g_mutex_unlock(valve_mutex); 
+  
   return true;
 }
 
@@ -95,23 +109,28 @@ extern "C" void button_openport_clicked(GtkWidget *p_wdgt, gpointer p_data )
   
 }
 
+extern "C" void button_reset_p0_clicked(GtkWidget *p_wdgt, gpointer p_data)
+{
+  g_mutex_lock(P0_max_mutex);
+  sprintf(P0_max,"%3.2f","0");
+  g_mutex_unlock(P0_max_mutex);
+}
+extern "C" void button_reset_p1_clicked(GtkWidget *p_wdgt, gpointer p_data)
+{
+  g_mutex_lock(P1_max_mutex);
+  sprintf(P1_max,"%3.2f","0");
+  g_mutex_unlock(P1_max_mutex);
+}
+
 extern "C" void button_closedevice_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
 {
   /*close ASIO*/
   std::cout<<"close";
   if(c != NULL)
+  {
     c->close();
-    /* gtk_entry_set_text(GTK_ENTRY(gui_app->entry_p0),"0 psi");
-        gtk_entry_set_text(GTK_ENTRY(gui_app->entry_p1),"0 psi");
-
-    gtk_entry_set_text(GTK_ENTRY(gui_app->entry_p0_max),"0 psi");
-
-    gtk_entry_set_text(GTK_ENTRY(gui_app->entry_p1_max),"0 psi"); */
-  gtk_label_set_text(GTK_LABEL(gui_app->entry_p1_max),"0 psi");
-  gtk_label_set_text(GTK_LABEL(gui_app->entry_p0_max),"0 psi");
-  gtk_label_set_text(GTK_LABEL(gui_app->entry_p1),"0 psi");
-  gtk_label_set_text(GTK_LABEL(gui_app->entry_p0),"0 psi");
-    
+    free(c);
+  }
 
 }
 
@@ -130,13 +149,17 @@ int main(int argc, char **argv)
   g_mutex_init(P1_mutex);
 
 
-g_assert(P0_max_mutex == NULL);
+  g_assert(P0_max_mutex == NULL);
   P0_max_mutex = new GMutex;
   g_mutex_init(P0_max_mutex);
 
-g_assert(P1_max_mutex == NULL);
+  g_assert(P1_max_mutex == NULL);
   P1_max_mutex = new GMutex;
   g_mutex_init(P1_max_mutex);
+
+  g_assert(valve_mutex == NULL);
+  valve_mutex = new GMutex;
+  g_mutex_init(valve_mutex);
 
 
   //create gtk_instance for visualization
@@ -166,7 +189,7 @@ g_assert(P1_max_mutex == NULL);
 
   //display the gui
   gtk_widget_show(GTK_WIDGET(gui_app->window1));
-  //gtk_main();
+
   //this is going to call the Voltage_Display_Displayer function periodically
   gdk_threads_add_timeout(VOLTAGE_DISPLAY_UPDATE_MS,P0_Display_Displayer,NULL);
   //this is going to call the Voltage_Display_Displayer function periodically
@@ -175,6 +198,9 @@ g_assert(P1_max_mutex == NULL);
   gdk_threads_add_timeout(100,P1_MAX_Display_Displayer,NULL);
   //this is going to call the Voltage_Display_Displayer function periodically
   gdk_threads_add_timeout(100,P0_MAX_Display_Displayer,NULL);
+  //this is going to call the Voltage_Display_Displayer function periodically
+  gdk_threads_add_timeout(100,valve_Display_Displayer,NULL);
+
 
   gtk_main();
 

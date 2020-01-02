@@ -78,8 +78,31 @@ typedef std::deque<chat_message> chat_message_queue;
         {
           if (!ec)
           {
-            std::cout.write(read_msg_.body(), read_msg_.body_length());
-            std::cout << "\n";
+            /* std::cout.write(read_msg_.body(), read_msg_.body_length());
+            std::cout << "\n"; */
+            int tmp = read_msg_.body()[4]<<8+read_msg_.body()[3], tmp_conv;
+            g_mutex_lock(P0_mutex);
+            sprintf(P0,"%3.2f",tmp);
+            g_mutex_unlock(P0_mutex);
+
+            g_mutex_lock(P0_max_mutex);
+            sscanf(P0_max, "%d", &tmp_conv);
+            if(tmp>tmp_conv)
+              sprintf(P0_max, "%3.2f", tmp);
+            g_mutex_unlock(P0_max_mutex);
+
+            tmp = read_msg_.body()[5]+read_msg_.body()[6]<<6;
+            g_mutex_lock(P1_mutex);
+            sprintf(P1,"%3.2f",tmp);
+            g_mutex_unlock(P1_mutex);
+
+            g_mutex_lock(P1_max_mutex);
+            sscanf(P1_max, "%d", &tmp_conv);
+            if(tmp>tmp_conv)
+              sprintf(P1_max, "%3.2f", tmp);
+            g_mutex_unlock(P1_max_mutex);
+
+
             do_read_header();
           }
           else
