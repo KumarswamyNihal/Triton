@@ -4,7 +4,7 @@ int validatepacket(int packetSize, unsigned char *buffer)
 {
 	if(buffer[0] != PACKET_START_BYTE)
 	{
-		printf("VALIDATE BIG%c\n", buffer[0]);
+		//printf("VALIDATE BIG%c\n", buffer[0]);
 		return 0;
 
 	}
@@ -25,7 +25,7 @@ int validatepacket(int packetSize, unsigned char *buffer)
 		checksum = checksum ^ buffer[i];
 	
 	if(buffer[packetSize-1] != checksum){
-		printf("%c", checksum);
+		//printf("%c", checksum);
 		return 0; 
 	}
 

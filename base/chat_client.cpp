@@ -80,6 +80,7 @@ typedef std::deque<chat_message> chat_message_queue;
           {
             /* std::cout.write(read_msg_.body(), read_msg_.body_length());
             std::cout << "\n"; */
+            if(containsP(read_msg_.body_length(), (unsigned char*)read_msg_.body()) == 1 && validatepacket(read_msg_.body_length(), (unsigned char*)read_msg_.body()) == 1){
             int tmp = read_msg_.body()[4]<<8+read_msg_.body()[3], tmp_conv;
             g_mutex_lock(P0_mutex);
             sprintf(P0,"%3.2f",tmp);
@@ -101,7 +102,7 @@ typedef std::deque<chat_message> chat_message_queue;
             if(tmp>tmp_conv)
               sprintf(P1_max, "%3.2f", tmp);
             g_mutex_unlock(P1_max_mutex);
-
+            }
 
             do_read_header();
           }

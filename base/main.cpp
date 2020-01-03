@@ -106,6 +106,9 @@ extern "C" void button_openport_clicked(GtkWidget *p_wdgt, gpointer p_data )
   const char *ip;
   ip = gtk_entry_get_text(GTK_ENTRY(gui_app->entry_ip));
   c = new chat_client(ip, "5000", "data.dat");
+
+  gtk_widget_set_sensitive (gui_app->button_close_port,TRUE);
+  gtk_widget_set_sensitive (gui_app->button_open_port,FALSE);
   
 }
 
@@ -131,6 +134,8 @@ extern "C" void button_closedevice_clicked(GtkWidget *p_wdgt, gpointer p_data )
     c->close();
     free(c);
   }
+  gtk_widget_set_sensitive (gui_app->button_close_port,FALSE);
+  gtk_widget_set_sensitive (gui_app->button_open_port,TRUE);
 
 }
 
@@ -187,9 +192,10 @@ int main(int argc, char **argv)
   // Destroy builder now that we created the infrastructure
   g_object_unref(G_OBJECT(builder));
 
+  gtk_widget_set_sensitive (gui_app->button_close_port,FALSE);
+  
   //display the gui
   gtk_widget_show(GTK_WIDGET(gui_app->window1));
-
   //this is going to call the Voltage_Display_Displayer function periodically
   gdk_threads_add_timeout(VOLTAGE_DISPLAY_UPDATE_MS,P0_Display_Displayer,NULL);
   //this is going to call the Voltage_Display_Displayer function periodically

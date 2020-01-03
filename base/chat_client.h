@@ -6,6 +6,7 @@
 #include "chat_message.hpp"
 
 #include "logger.h"
+#include "packets.h"
 
 #pragma once
 
