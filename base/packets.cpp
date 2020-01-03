@@ -20,14 +20,16 @@ int validatepacket(int packetSize, unsigned char *buffer)
 		
 		return 0;
 	}
-	unsigned char checksum = 0x00;
+	
+	//Below block causes error with ASIO
+	/* unsigned char checksum = 0x00;
 	for(unsigned int i=0; i < packetSize-1; i++)
 		checksum = checksum ^ buffer[i];
 	
 	if(buffer[packetSize-1] != checksum){
-		//printf("%c", checksum);
+		printf("%c", checksum); 
 		return 0; 
-	}
+	}*/
 
 	return 1;
 }

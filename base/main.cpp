@@ -68,6 +68,7 @@ gboolean  P1_Display_Displayer(gpointer p_gptr)
 gboolean  valve_Display_Displayer(gpointer p_gptr)
 {
    char tr[40] = "OPEN", fa[40] = "CLOSED";
+   
   g_mutex_lock(valve_mutex);
    if(valve_state == true)
     gtk_label_set_text(GTK_LABEL(gui_app->entry_valve),tr);

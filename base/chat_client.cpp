@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "chat_client.h"
 #include "global.h"
 
@@ -92,7 +94,7 @@ typedef std::deque<chat_message> chat_message_queue;
               sprintf(P0_max, "%3.2f", tmp);
             g_mutex_unlock(P0_max_mutex);
 
-            tmp = read_msg_.body()[5]+read_msg_.body()[6]<<6;
+            tmp = read_msg_.body()[5]+read_msg_.body()[6]<<8;
             g_mutex_lock(P1_mutex);
             sprintf(P1,"%3.2f",tmp);
             g_mutex_unlock(P1_mutex);
@@ -103,7 +105,22 @@ typedef std::deque<chat_message> chat_message_queue;
               sprintf(P1_max, "%3.2f", tmp);
             g_mutex_unlock(P1_max_mutex);
             }
-
+            char tmp[90];
+            g_mutex_lock(P0_mutex);
+            strcpy(tmp, P0);
+            g_mutex_unlock(P0_mutex);
+            strcat(tmp, ", ");
+            g_mutex_lock(P1_mutex);
+            strcat(tmp, P1);
+            g_mutex_unlock(P1_mutex);
+            strcat(tmp, ", ");
+            g_mutex_lock(valve_mutex);
+            if(valve_state == true)
+              strcat(tmp, "1");
+            else if(valve_state == false)
+              strcat(tmp, "0");
+            g_mutex_unlock(valve_mutex); 
+            data->log(tmp);
             do_read_header();
           }
           else
