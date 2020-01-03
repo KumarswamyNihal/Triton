@@ -125,7 +125,124 @@ extern "C" void button_reset_p1_clicked(GtkWidget *p_wdgt, gpointer p_data)
   sprintf(P1_max,"%3.2f","0");
   g_mutex_unlock(P1_max_mutex);
 }
-
+extern "C" void button_openvalve_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
+{
+  g_mutex_lock(valve_mutex);
+    valve_state = true;
+  g_mutex_unlock(valve_mutex);
+  
+  chat_message msg;
+  msg.body_length(2);
+  strncpy(msg.body(), "VT", 2);
+  
+  msg.encode_header();
+  c->write(msg); 
+  
+}
+extern "C" void button_closevalve_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
+{
+  g_mutex_lock(valve_mutex);
+    valve_state = false;
+  g_mutex_unlock(valve_mutex); 
+  
+  chat_message msg;
+  msg.body_length(2);
+  strncpy(msg.body(), "VF", 2);
+  
+  msg.encode_header();
+  c->write(msg); 
+  
+}
+gpointer close_after5()
+{
+  usleep(5*1000000);
+  g_mutex_lock(valve_mutex);
+    valve_state = false;
+  g_mutex_unlock(valve_mutex); 
+  
+  chat_message msg;
+  msg.body_length(2);
+  strncpy(msg.body(), "VF", 2);
+  
+  msg.encode_header();
+  c->write(msg);
+  return NULL;
+}
+gpointer close_after10()
+{
+  usleep(10*1000000);
+  g_mutex_lock(valve_mutex);
+    valve_state = false;
+  g_mutex_unlock(valve_mutex); 
+  
+  chat_message msg;
+  msg.body_length(2);
+  strncpy(msg.body(), "VF", 2);
+  
+  msg.encode_header();
+  c->write(msg);
+  return NULL;
+}
+gpointer close_after15()
+{
+  usleep(15*1000000);
+  g_mutex_lock(valve_mutex);
+    valve_state = false;
+  g_mutex_unlock(valve_mutex); 
+  
+  chat_message msg;
+  msg.body_length(2);
+  strncpy(msg.body(), "VF", 2);
+  
+  msg.encode_header();
+  c->write(msg);
+  return NULL;
+}
+extern "C" void button_openvalve5s_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
+{
+  g_mutex_lock(valve_mutex);
+    valve_state = true;
+  g_mutex_unlock(valve_mutex); 
+  
+  chat_message msg;
+  msg.body_length(2);
+  strncpy(msg.body(), "VT", 2);
+  
+  msg.encode_header();
+  c->write(msg); 
+  g_thread_new(NULL,(GThreadFunc)close_after5,NULL);
+  
+}
+extern "C" void button_openvalve10s_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
+{
+  g_mutex_lock(valve_mutex);
+    valve_state = true;
+  g_mutex_unlock(valve_mutex); 
+  
+  chat_message msg;
+  msg.body_length(2);
+  strncpy(msg.body(), "VT", 2);
+  
+  msg.encode_header();
+  c->write(msg); 
+  g_thread_new(NULL,(GThreadFunc)close_after10,NULL);
+  
+}
+extern "C" void button_openvalve15s_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
+{
+  g_mutex_lock(valve_mutex);
+    valve_state = true;
+  g_mutex_unlock(valve_mutex); 
+  
+  chat_message msg;
+  msg.body_length(2);
+  strncpy(msg.body(), "VT", 2);
+  
+  msg.encode_header();
+  c->write(msg); 
+  g_thread_new(NULL,(GThreadFunc)close_after15,NULL);
+  
+}
 extern "C" void button_closedevice_clicked(GtkWidget *p_wdgt, gpointer p_data ) 
 {
   /*close ASIO*/

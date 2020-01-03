@@ -2,6 +2,8 @@
 #pragma once
 
 #define PACKET_START_BYTE  0xAA
+const unsigned char PACKET_OPEN_VALVE[] = {PACKET_START_BYTE, 5, 'V', 'T',PACKET_START_BYTE^5^'V'^'T' };
+const unsigned char PACKET_CLOSE_VALVE[] = {PACKET_START_BYTE, 5, 'V', 'F',PACKET_START_BYTE^5^'V'^'F'};
 
 /*Verifies if a packet is a legitimate packet*/
 int validatepacket(int packetSize, unsigned char *buffer);

@@ -1,4 +1,6 @@
 #include <ctime>
+#include <string.h>
+#include <sys/time.h>
 
 #include "logger.h"
 
@@ -11,16 +13,24 @@ int logger::log(char *text, int size)
 {
     if(!outfile)
         return -1;
+    
     time_t rawtime;
     struct tm * timeinfo;
-    char buffer[20];
-
+    char buffer[80];
+    timeval curTime;
+    
+    gettimeofday(&curTime, NULL);
+    int milli = curTime.tv_usec / 1000;
+    
     time (&rawtime);
     timeinfo = localtime(&rawtime);
 
     strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
-    outfile.write(buffer, 19);
-    outfile<<",";
+
+    sprintf(buffer, "%s:%03d", buffer, milli);
+
+    outfile.write(buffer, strlen(buffer));
+    outfile<<", ";
     outfile.write(text, size);
     outfile<<std::endl;
 
@@ -34,14 +44,21 @@ int logger::log(std::string text)
         return -1;
     time_t rawtime;
     struct tm * timeinfo;
-    char buffer[20];
+    char buffer[80];
+    timeval curTime;
+    
+    gettimeofday(&curTime, NULL);
+    int milli = curTime.tv_usec / 1000;
 
     time (&rawtime);
     timeinfo = localtime(&rawtime);
 
     strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
-    outfile.write(buffer, 19);
-    outfile<<",";
+
+    sprintf(buffer, "%s:%03d", buffer, milli);
+
+    outfile.write(buffer, strlen(buffer));
+    outfile<<", ";
     outfile<<text;
     outfile<<std::endl;
 

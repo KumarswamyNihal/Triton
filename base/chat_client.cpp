@@ -90,7 +90,7 @@ typedef std::deque<chat_message> chat_message_queue;
 
             g_mutex_lock(P0_max_mutex);
             sscanf(P0_max, "%d", &tmp_conv);
-            if(tmp>tmp_conv)
+            if(tmp>=tmp_conv)
               sprintf(P0_max, "%3.2f", tmp);
             g_mutex_unlock(P0_max_mutex);
 
@@ -101,7 +101,7 @@ typedef std::deque<chat_message> chat_message_queue;
 
             g_mutex_lock(P1_max_mutex);
             sscanf(P1_max, "%d", &tmp_conv);
-            if(tmp>tmp_conv)
+            if(tmp>=tmp_conv)
               sprintf(P1_max, "%3.2f", tmp);
             g_mutex_unlock(P1_max_mutex);
             }
