@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     serial_rec = new logger("serial_rec.dat");
 
     /*Opening serial port*/
-    ser_dev = open("/dev/ttyACM0", O_RDWR | O_NOCTTY);
+    ser_dev = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY);
 	bzero(&my_serial, sizeof(my_serial));
 	my_serial.c_cflag = B9600 | CS8 | CLOCAL | CREAD;
 	tcflush(ser_dev, TCIFLUSH);
@@ -66,6 +66,7 @@ int main(int argc, char* argv[])
 					count++;
 				}
 				if(count >= packetSize){
+	
 					if(validatepacket(packetSize, buffer) == 1){
 						//Received a packet
 
@@ -91,6 +92,7 @@ int main(int argc, char* argv[])
 			}
 		}
 		else{
+			std::cerr<<"cannot find serial"<<std::endl;
 			usleep(100000);	//Sleep between threads. Need to decrease time
 			}
 	}
