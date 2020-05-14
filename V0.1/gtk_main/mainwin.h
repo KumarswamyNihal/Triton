@@ -13,6 +13,7 @@ class Mainwin : public Gtk::Window
 	protected:
 		void on_reset_p0_click();
 		void on_reset_p1_click();
+		void on_reset_p2_click();
 		void on_reset_click();
 		void on_openport_click();
 		void on_closeport_click();

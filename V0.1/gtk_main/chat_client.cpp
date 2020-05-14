@@ -100,6 +100,13 @@ chat_client::chat_client(std::string ip, std::string port
             
             sprintf(tmp_c, "%3.3f", tmp_f);
             payload_->p1 = std::string(tmp_c);
+
+			tmp = ((unsigned char)read_msg_.body()[8]<<8) + ((unsigned char)read_msg_.body()[7]);
+			tmp_f = (((tmp/4096.0)*3.3)*55.5566)-16.66666;
+
+			sprintf(tmp_c, "%3.3f", tmp_f);
+			payload_->p2 = std::string(tmp_c);
+
           }
           if(payload_->valve_state == false)
             data->log(payload_->p0+", "+payload_->p1+", "+"0");

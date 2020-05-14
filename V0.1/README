@@ -1,0 +1,4 @@
+Version 1 of datalogger/controller for Triton
+
+Used C/C++ to read STM32 and BOOST/ASIO to communicate with base station
+Problems: Hard to port

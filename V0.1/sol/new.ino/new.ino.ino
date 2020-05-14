@@ -1,5 +1,6 @@
 const int P0 = PB0;
 const int P1 = PB1;
+const int P2 = PA7;
 const int valve = PB5;
 const int builtin_led = PC13;
 const unsigned long BAUD_RATE = 9600;
@@ -14,6 +15,7 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(P0, INPUT_ANALOG);
   pinMode(P1, INPUT_ANALOG);
+  pinMode(P2, INPUT_ANALOG);
   pinMode(valve, OUTPUT);
   pinMode(builtin_led, OUTPUT);
 
@@ -173,7 +175,9 @@ void loop() {
       transmit[2] = analogRead(P0)>>8;
       transmit[3] = analogRead(P1) & 0xFF;
       transmit[4] = analogRead(P1)>>8;
-      sendPacket(5, transmit);
+	  transmit[5] = analogRead(P2) & 0xFF;
+	  transmit[6] = analogRead(P2)>>8;
+      sendPacket(7, transmit);
     
   }
 }

@@ -16,6 +16,7 @@ using asio::ip::tcp;
 struct Payload{
 	std::string p0;
 	std::string p1;
+	std::string p2;
     bool valve_state;
 };
 

@@ -71,6 +71,11 @@ Mainwin::Mainwin() : _controller{Controller{}} {
 	menuitem_resetp1->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_reset_p1_click));
 	pressuremenu->append(*menuitem_resetp1);
 
+	//Reset P2 Max
+	Gtk::MenuItem *menuitem_resetp2 = Gtk::manage(new Gtk::MenuItem("_Reset P2 Max", true));
+	menuitem_resetp2->signal_activate().connect(sigc::mem_fun(*this, &Mainwin::on_reset_p2_click));
+	pressuremenu->append(*menuitem_resetp2);
+
 	
 	//Valve 
 	Gtk::MenuItem *menuitem_valve = Gtk::manage(new Gtk::MenuItem("_Valve", true));
@@ -166,9 +171,16 @@ Mainwin::Mainwin() : _controller{Controller{}} {
 	row3[_columns.m_value] = 0.00;
 	row3[_columns.m_max] = 0.00;
 	row3[_columns.m_min] = 0.00;
+	
+	Gtk::TreeModel::Row row4 = *(_tree_model->append());
+	row4[_columns.m_id] = 2;
+	row4[_columns.m_name] = "P2";
+	row4[_columns.m_value] = 0.00;
+	row4[_columns.m_max] = 0.00;
+	row4[_columns.m_min] = 0.00;
 
 	Gtk::TreeModel::Row row5 = *(_tree_model->append());
-	row5[_columns.m_id] = 2;
+	row5[_columns.m_id] = 3;
 	row5[_columns.m_name] = "Solenoid Valve";
 	row5[_columns.m_state] = "CLOSED";
 	row5[_columns.m_max] = 0.00;
@@ -183,12 +195,14 @@ bool Mainwin::update_display()
 
 	Gtk::TreeIter p0 = _tree_model->get_iter("0");
 	Gtk::TreeIter p1 = _tree_model->get_iter("1");
-	
-	Gtk::TreeIter valve = _tree_model->get_iter("2");
+	Gtk::TreeIter p2 = _tree_model->get_iter("2");
+
+	Gtk::TreeIter valve = _tree_model->get_iter("3");
 	
 	try{
 	(*p0)[_columns.m_value] = std::stof(_controller.payload->p0);
 	(*p1)[_columns.m_value] = std::stof(_controller.payload->p1);
+	(*p2)[_columns.m_value] = std::stof(_controller.payload->p2);
 
 	//P0
 	if(((*p0)[_columns.m_value]) > (*p0)[_columns.m_max])
@@ -203,6 +217,13 @@ bool Mainwin::update_display()
 	
 	if(((*p1)[_columns.m_value]) < (*p1)[_columns.m_min])
 		(*p1)[_columns.m_min] = std::stof(_controller.payload->p1);
+
+	//P2
+	if(((*p2)[_columns.m_value]) > (*p2)[_columns.m_max])
+		(*p2)[_columns.m_max] = std::stof(_controller.payload->p2);
+
+	if(((*p2)[_columns.m_value]) < (*p2)[_columns.m_min])
+		(*p2)[_columns.m_min] = std::stof(_controller.payload->p2);
 	}
 	catch(const std::exception& e)
 	{
@@ -252,6 +273,7 @@ void Mainwin::on_reset_click()
 {
 	on_reset_p0_click();
 	on_reset_p1_click();
+	on_reset_p2_click();
 }
 void Mainwin::on_save_click()
 {
@@ -269,7 +291,11 @@ void Mainwin::on_reset_p1_click()
 	Gtk::TreeIter p1max = _tree_model->get_iter("1");
 	(*p1max)[_columns.m_max] = 0;
 }
-
+void Mainwin::on_reset_p2_click()
+{
+	Gtk::TreeIter p2max = _tree_model->get_iter("2");
+	(*p2max)[_columns.m_max] = 0;
+}
 void Mainwin::on_openport_click()
 {
 	//Open Port
