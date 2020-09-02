@@ -1,2 +1,4 @@
 .vscode
 .dist
+*.o
+*.gch

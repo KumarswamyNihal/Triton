@@ -109,9 +109,9 @@ chat_client::chat_client(std::string ip, std::string port
 
           }
           if(payload_->valve_state == false)
-            data->log(payload_->p0+", "+payload_->p1+", "+"0");
+            data->log(payload_->p0+", "+payload_->p1+", "+payload_->p2+", "+"0");
           else if(payload_->valve_state == true)
-            data->log(payload_->p0+", "+payload_->p1+", "+"1");
+            data->log(payload_->p0+", "+payload_->p1+", "+payload_->p2+", "+"1");
             do_read_header();
           }
           else

@@ -77,6 +77,8 @@ Mainwin::Mainwin() : _controller{Controller{}} {
 	pressuremenu->append(*menuitem_resetp2);
 
 	
+
+	
 	//Valve 
 	Gtk::MenuItem *menuitem_valve = Gtk::manage(new Gtk::MenuItem("_Valve", true));
 	menubar->append(*menuitem_valve);
