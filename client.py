@@ -16,6 +16,7 @@ line = client.recv(1024)
 client.sendall('valve'.encode())
 
 print(line)  
+time.sleep(10)
 
 #TODO: Recieve pressure data and format it. Save it and display it
 #      Send "valve" when open/close clicked
