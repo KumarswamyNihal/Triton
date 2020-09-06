@@ -26,7 +26,7 @@ for x in ports:
 #TODO: Read port and Server.send() (p0, p1, p2, valve)
 #      Server.get() If == 'valve' switch valve position
 
-#ser = serial.Serial(port)
+ser = serial.Serial(port)
 
 current = time.localtime()
 month = current.tm_mon 
@@ -39,4 +39,9 @@ filename = str(month)+'/'+str(day)+' '+str(hour)+':'+str(minute)+':'+str(sec)
 
 f = open(filename, 'w+')
 
-
+while True:
+    line = ser.readline()
+    print(line)
+    print(type(line))
+    print(len(line))
+    f.write(line)
