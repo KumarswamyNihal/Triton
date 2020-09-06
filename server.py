@@ -35,6 +35,7 @@ class server:
     def get(self):
         #TODO: Return message + some indentity to verify
         for x in self.clients:
+            mesg = ''
             try:
                 mesg = x.recv(1024).decode()
             except:
