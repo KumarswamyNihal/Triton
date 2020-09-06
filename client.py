@@ -11,12 +11,13 @@ client = socket(AF_INET, SOCK_STREAM)
 
 client.connect((host, port))
 
-line = client.recv(1024)
+while True:
+    line = client.recv(1024)
 
-client.sendall('valve'.encode())
+    #client.sendall('valve'.encode())
 
-print(line)  
-time.sleep(10)
+    print(line)  
+
 
 #TODO: Recieve pressure data and format it. Save it and display it
 #      Send "valve" when open/close clicked
