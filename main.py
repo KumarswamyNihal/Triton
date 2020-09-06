@@ -23,3 +23,5 @@ for x in ports:
     if 'Maple' in x.description:
         port = x.device 
 
+#TODO: Read port and Server.send() (p0, p1, p2, valve)
+#      Server.get() If == 'valve' switch valve position
