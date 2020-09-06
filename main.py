@@ -35,7 +35,7 @@ minute = current.tm_min
 sec = current.tm_sec
 day = current.tm_mday
 
-filename = str(month)+'/'+str(day)+' '+str(hour)+':'+str(minute)+':'+str(sec) 
+filename = str(month)+'.'+str(day)+' '+str(hour)+':'+str(minute)+':'+str(sec) 
 
 f = open(filename, 'w')
 
