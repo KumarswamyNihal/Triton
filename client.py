@@ -5,19 +5,12 @@ import threading
 import PySimpleGUI as sg 
 
 
-host = sys.argv[1]
+host = ''
+#host = sys.argv[1]
 port = 5000
 
 client = socket(AF_INET, SOCK_STREAM)
-
-client.connect((host, port))
-
-""" while True:
-    line = client.recv(1024)
-
-    client.sendall('valve'.encode())
-
-    print(line)  """ 
+ 
 
 
 #TODO: Recieve pressure data and format it. Save it and display it
@@ -36,6 +29,23 @@ filename = str(month)+'.'+str(day)+' '+str(hour)+':'+str(minute)+':'+str(sec)
 f = open(filename, 'w')
 
 sg.theme('DarkBlue')
+
+layout = [[sg.Text('Server IP')], [sg.InputText()], [sg.Button('Open') ,sg.Quit()]]
+window = sg.Window('LRE', layout)
+
+while True:
+    event, values = window.read(timeout=10)
+    if event in ('Quit', sg.WIN_CLOSED):
+        break
+
+    if event == 'Open':
+        if values[0]:
+            host = values[0]
+            print(host)
+            break
+
+client.connect((host, port))
+
 c0 = 0.0
 c1 = 0.0 
 c2 = 0.0
