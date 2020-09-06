@@ -35,6 +35,8 @@ minute = current.tm_min
 sec = current.tm_sec
 day = current.tm_mday
 
+valveState = False
+
 filename = str(month)+'.'+str(day)+' '+str(hour)+':'+str(minute)+':'+str(sec) 
 
 f = open(filename, 'w')
@@ -42,4 +44,13 @@ f = open(filename, 'w')
 while True:
     line = ser.readline().decode()
     line = str(time.time())+', '+line
+    print(line)
     f.write(line)
+    mesg = Server.get()
+    if mesg == 'valve':
+        if valveState:
+            ser.write('F')
+            valveState = False
+        elif not valveState 
+            ser.write('T')
+            valveState = True

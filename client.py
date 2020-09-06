@@ -4,7 +4,7 @@ import time
 import PySimpleGUI as sg 
 
 
-""" host = sys.argv[1]
+host = sys.argv[1]
 port = 5000
 
 client = socket(AF_INET, SOCK_STREAM)
@@ -13,14 +13,14 @@ client.connect((host, port))
 
 line = client.recv(1024)
 
-client.sendall('nihal'.encode())
+client.sendall('valve'.encode())
 
-print(line) """
+print(line) 
 
 #TODO: Recieve pressure data and format it. Save it and display it
 #      Send "valve" when open/close clicked
 
-sg.theme('DarkBlue')
+""" sg.theme('DarkBlue')
 c1 = 0.0
 c2 = 0.0 
 c3 = 0.0
@@ -52,3 +52,4 @@ while True:
 
 
 window.close()
+ """
