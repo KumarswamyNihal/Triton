@@ -11,16 +11,16 @@ client = socket(AF_INET, SOCK_STREAM)
 
 client.connect((host, port))
 
-""" line = client.recv(1024)
+line = client.recv(1024)
 
 client.sendall('valve'.encode())
 
-print(line)  """
+print(line)  
 
 #TODO: Recieve pressure data and format it. Save it and display it
 #      Send "valve" when open/close clicked
 
-sg.theme('DarkBlue')
+""" sg.theme('DarkBlue')
 c1 = 0.0
 c2 = 0.0 
 c3 = 0.0
@@ -39,8 +39,12 @@ window = sg.Window('LRE', layout)
 
 while True:
     event, values = window.read(timeout=10)
+
     if event in ('Quit',sg.WIN_CLOSED):
         break
+    
+    line = client.recv(1024)
+    print(line)
     window['P0'].update('{0:.2f}'.format(c1))
     window['P1'].update('{0:.2f}'.format(c2))
     window['P2'].update('{0:.2f}'.format(c3))
@@ -51,4 +55,4 @@ while True:
     c3 += 1
 
 
-window.close()
+window.close() """

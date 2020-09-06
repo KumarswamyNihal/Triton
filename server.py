@@ -14,7 +14,7 @@ class server:
     clients = []
 
     def run(self):
-        self.server.bind((self.h_name, self.port))
+        self.server.bind(('', self.port))
         self.server.listen()
         thread = threading.Thread(target = self.thread_accept, args = [])
         thread.start()
