@@ -27,7 +27,10 @@ class server:
 
     def send(self, message):
         for x in self.clients:
-            x.send(message.encode())
+            try:
+                x.send(message.encode())
+            except:
+                clients.remove(x)
     
     def get(self):
         #TODO: Return message + some indentity to verify
