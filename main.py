@@ -51,6 +51,6 @@ while True:
         if valveState:
             ser.write('F')
             valveState = False
-        elif not valveState 
+        elif not valveState: 
             ser.write('T')
             valveState = True
