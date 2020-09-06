@@ -30,7 +30,7 @@ class server:
             try:
                 x.send(message.encode())
             except:
-                clients.remove(x)
+                self.clients.remove(x)
     
     def get(self):
         #TODO: Return message + some indentity to verify
