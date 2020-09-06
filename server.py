@@ -39,6 +39,7 @@ class server:
                 mesg = x.recv(1024).decode()
             except:
                 pass
+
             if len(mesg) > 0:
                 return mesg 
             
