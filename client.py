@@ -1,6 +1,7 @@
 from socket import *
 import sys
 import time
+import threading
 import PySimpleGUI as sg 
 
 
@@ -45,7 +46,7 @@ layout = [ [sg.Text('P0: ', size=(20, 2) ), sg.Text(key='P0', size=(20, 2))],
             [sg.Text('P1: ', size=(20, 2) ), sg.Text(key='P1', size=(20, 2))],
             [sg.Text('P2: ', size=(20, 2) ), sg.Text(key='P2', size=(20, 2))],
             [sg.Text('Valve state: ', size=(20, 2) ), sg.Text(key='valve', size=(20, 2))],
-            [sg.Button('Open 5s', 'left'), sg.Button('Open 1s', 'center'), sg.Button('Open 10s', 'right')],
+            [sg.Button('Open 5s'), sg.Button('Open 1s'), sg.Button('Open 10s')],
             [sg.Button('Open'), sg.Button('Close')],
             [sg.Quit()]]
 
@@ -62,6 +63,21 @@ while True:
 
     if event == 'Close' and valve == True:
         client.sendall('valve'.encode())
+    
+    if event == 'Open 5s':
+        client.sendall('valve'.encode())
+        thread = threading.Thread(target = close_after, args = (5, ))
+        thread.start()
+    
+    if event == 'Open 1s':
+        client.sendall('valve'.encode())
+        thread = threading.Thread(target = close_after, args = (1, ))
+        thread.start()
+
+    if event == 'Open 10s':
+        client.sendall('valve'.encode())
+        thread = threading.Thread(target = close_after, args = (10, ))
+        thread.start()
     
     line = client.recv(1024).decode()
     f.write(line)
@@ -87,3 +103,6 @@ while True:
 
 window.close() 
 
+def close_after(time):
+    time.sleep(time)
+    client.sendall('valve'.encode())
