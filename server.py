@@ -22,7 +22,7 @@ class server:
     def thread_accept(self):
         while True:
             con, addr = self.server.accept()
-            #con.settimeout(0.1)
+            con.settimeout(0.1)
             self.clients.append(con)
 
     def send(self, message):
@@ -35,7 +35,8 @@ class server:
     def get(self):
         #TODO: Return message + some indentity to verify
         for x in self.clients:
-            mesg = x.recv(1024).decode()
+            try:
+                mesg = x.recv(1024).decode()
             if len(mesg) > 0:
                 return mesg 
             
