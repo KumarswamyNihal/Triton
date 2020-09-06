@@ -37,7 +37,7 @@ day = current.tm_mday
 
 filename = str(month)+'/'+str(day)+' '+str(hour)+':'+str(minute)+':'+str(sec) 
 
-f = open(filename, 'w+')
+f = open(filename, 'w')
 
 while True:
     line = ser.readline()
