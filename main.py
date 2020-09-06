@@ -52,5 +52,5 @@ while True:
             ser.write('F')
             valveState = False
         elif not valveState: 
-            ser.write('T')
+            ser.write('T'.encode())
             valveState = True
