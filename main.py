@@ -46,6 +46,7 @@ while True:
     line = str(time.time())+', '+line
     print(line)
     f.write(line)
+    Server.send(line)
     mesg = Server.get()
     if mesg == 'valve':
         if valveState:
