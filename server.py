@@ -37,6 +37,8 @@ class server:
         for x in self.clients:
             try:
                 mesg = x.recv(1024).decode()
+            except:
+                
             if len(mesg) > 0:
                 return mesg 
             
