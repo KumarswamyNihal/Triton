@@ -41,7 +41,5 @@ f = open(filename, 'w')
 
 while True:
     line = ser.readline().decode()
-    print(line)
-    print(type(line))
-    print(len(line))
+    line = str(time.time())+', '+line
     f.write(line)
