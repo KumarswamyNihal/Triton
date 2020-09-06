@@ -22,7 +22,7 @@ class server:
     def thread_accept(self):
         while True:
             con, addr = self.server.accept()
-            con.settimeout(0.1)
+            con.settimeout(0.01)
             self.clients.append(con)
 
     def send(self, message):
