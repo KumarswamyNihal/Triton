@@ -50,7 +50,7 @@ while True:
     mesg = Server.get()
     if mesg == 'valve':
         if valveState:
-            ser.write('F')
+            ser.write('F'.encode())
             valveState = False
         elif not valveState: 
             ser.write('T'.encode())

@@ -14,7 +14,7 @@ client.connect((host, port))
 while True:
     line = client.recv(1024)
 
-    #client.sendall('valve'.encode())
+    client.sendall('valve'.encode())
 
     print(line)  
 
