@@ -5,6 +5,10 @@ import threading
 import PySimpleGUI as sg 
 
 
+def close_after(sec, client):
+    time.sleep(sec)
+    client.sendall('valve'.encode())
+
 host = ''
 #host = sys.argv[1]
 port = 5000
@@ -76,17 +80,17 @@ while True:
     
     if event == 'Open 5s':
         client.sendall('valve'.encode())
-        thread = threading.Thread(target = close_after, args = (5, ))
+        thread = threading.Thread(target = close_after, args = (5, client,  ))
         thread.start()
     
     if event == 'Open 1s':
         client.sendall('valve'.encode())
-        thread = threading.Thread(target = close_after, args = (1, ))
+        thread = threading.Thread(target = close_after, args = (1, client,  ))
         thread.start()
 
     if event == 'Open 10s':
         client.sendall('valve'.encode())
-        thread = threading.Thread(target = close_after, args = (10, ))
+        thread = threading.Thread(target = close_after, args = (10, client,))
         thread.start()
     
     line = client.recv(1024).decode()
@@ -113,6 +117,4 @@ while True:
 
 window.close() 
 
-def close_after(time):
-    time.sleep(time)
-    client.sendall('valve'.encode())
+
