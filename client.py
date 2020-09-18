@@ -48,6 +48,8 @@ while True:
             print(host)
             break
 
+window.close()
+
 client.connect((host, port))
 
 c0 = 0.0
